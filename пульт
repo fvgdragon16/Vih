@@ -1,0 +1,51 @@
+#include <SPI.h>
+#include "nRF24L01.h"
+#include "RF24.h"
+
+
+#define LEFT_Y A3
+#define RIGHT_X A1
+
+
+RF24 radio(9, 10); 
+int data[2];       //int в byte
+
+
+void InitRadio() {
+  radio.begin();
+
+ 	radio.setAutoAck(1);
+  radio.setRetries(0, 15);
+	radio.openWritingPipe(0xAABBCCDD11LL);
+  radio.setChannel(5);
+	radio.setPALevel(RF24_PA_MAX); //устанавливаем мощность передачи
+  radio.setDataRate(RF24_1MBPS); //устанавливаем скорость передачи
+
+	radio.powerUp();
+  radio.stopListening();
+}
+
+void setup() {
+	Serial.begin(9600);
+  InitRadio();
+}
+
+void GetControllerData() { //считывание значение с джойстиков и его преобразование
+	data[0] = map(analogRead(LEFT_Y), 0, 1023, -70, 70);
+	data[1] = map(analogRead(RIGHT_X), 0, 1023, -511, 511);
+
+  if (data[1] <= 3 and data[1] >= -3) {
+    data[1] = 0;
+  }
+}
+
+void loop() {
+  GetControllerData();
+  //отладка
+  Serial.print("Motor cout: ");
+  Serial.println(data[0]);
+  Serial.print("Servo cout: ");
+  Serial.println(data[1]);
+
+	radio.write(&data, sizeof(data)); //отправка массива с данными с джойстика
+}
