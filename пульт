@@ -47,5 +47,5 @@ void loop() {
   Serial.print("Servo cout: ");
   Serial.println(data[1]);
 
-	radio.write(&data, sizeof(data)); //отправка массива с данными с джойстика
+radio.write(&data, sizeof(data)); //отправка массива с данными с джойстика
 }
