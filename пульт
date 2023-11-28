@@ -31,7 +31,7 @@ void setup() {
 }
 
 void GetControllerData() { //считывание значение с джойстиков и его преобразование
-	data[0] = map(analogRead(LEFT_Y), 0, 1023, -70, 70);
+	data[0] = map(analogRead(LEFT_Y), 0, 1023, -150, 150);
 	data[1] = map(analogRead(RIGHT_X), 0, 1023, -511, 511);
 
   if (data[1] <= 3 and data[1] >= -3) {
@@ -47,5 +47,5 @@ void loop() {
   Serial.print("Servo cout: ");
   Serial.println(data[1]);
 
-radio.write(&data, sizeof(data)); //отправка массива с данными с джойстика
+	radio.write(&data, sizeof(data)); //отправка массива с данными с джойстика
 }
